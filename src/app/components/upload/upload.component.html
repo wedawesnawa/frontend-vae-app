@@ -1,0 +1,102 @@
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <!-- Header dengan Logo -->
+  <div class="text-center mb-12">
+    <div class="flex items-center justify-center gap-4 mb-6">
+      <img src="/logo.png" alt="Logo" class="w-16 h-16 object-contain">
+      <div class="text-left">
+        <h1 class="text-3xl font-bold text-gray-800">Sintetis Suara Gambelan</h1>
+        <h2 class="text-2xl font-semibold text-orange-500">Reyong Bali</h2>
+      </div>
+    </div>
+    <p class="text-gray-600 text-lg">
+      Unggah file audio hasil sintesis bunyi reyong untuk disimpan diputar dan direkonstruksi oleh sistem
+    </p>
+  </div>
+
+  <!-- Area Upload -->
+  <div class="w-full max-w-2xl">
+    <!-- Hidden File Input -->
+    <input
+      type="file"
+      id="fileInput"
+      class="hidden"
+      accept=".mp3,.wav,audio/mpeg,audio/wav"
+      (change)="onFileSelected($event)"
+    >
+
+    <!-- Drop Zone -->
+    <div
+      class="relative border-2 border-dashed rounded-xl p-12 transition-all duration-200 cursor-pointer"
+      [class.border-orange-500]="isDragging"
+      [class.border-gray-300]="!isDragging"
+      [class.bg-orange-50]="isDragging"
+      [class.bg-white]="!isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="triggerFileInput()"
+    >
+      <div class="flex flex-col items-center justify-center space-y-4">
+        <!-- Upload Status -->
+        @if (!isUploaded) {
+          <!-- Icon Upload -->
+          <div class="w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center">
+            <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </div>
+
+          <div class="text-center">
+            <p class="text-gray-700 text-lg mb-2">
+              <span class="font-semibold">Klik untuk upload</span> atau drag and drop
+            </p>
+            <p class="text-gray-500">MP3 atau WAV (maks. 10MB)</p>
+          </div>
+
+          <!-- Tombol Plus -->
+          <button
+            class="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-lg transition-colors"
+            (click)="triggerFileInput(); $event.stopPropagation()"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </button>
+        } @else {
+          <!-- Loading/Uploading State -->
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4">
+              <svg class="animate-spin w-16 h-16 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+            <p class="text-gray-700 font-medium">Mengupload file...</p>
+            <p class="text-sm text-gray-500 mt-2">{{ fileName }} ({{ fileSize }})</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Info Format -->
+    <div class="mt-6 flex items-center justify-center space-x-4 text-sm text-gray-500">
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        MP3
+      </span>
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        WAV
+      </span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-12 text-center text-sm text-gray-400">
+    <p>Supported formats: MP3, WAV • Max file size: 10MB</p>
+  </div>
+</div>

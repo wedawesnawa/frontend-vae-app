@@ -1,0 +1,111 @@
+<div class="min-h-screen py-12 px-4">
+  <div class="max-w-6xl mx-auto space-y-12">
+
+    <!-- Section 1: Data Train -->
+    <section>
+      <!-- Header dengan judul dan tombol -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+        <div>
+          <h1 class="text-3xl font-semibold text-gray-800">Data Train</h1>
+          <p class="text-sm text-gray-500 mt-1">
+            Data yang ditampilkan jumlahnya terbatas, refresh untuk memperbarui data yang akan ditampilkan
+          </p>
+        </div>
+
+        <!-- Tombol Refresh -->
+        <button
+          (click)="onRefresh('train')"
+          class="mt-4 sm:mt-0 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+
+      <!-- List Data Train -->
+      <div class="space-y-3">
+        <div
+          *ngFor="let file of trainData"
+          (click)="playAudio(file)"
+          class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200 flex items-center gap-4"
+        >
+          <!-- Icon Headphone -->
+          <div class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+          </div>
+
+          <!-- Nama File -->
+          <div class="flex-1">
+            <p class="text-gray-700 font-mono text-sm">{{ file.name }}</p>
+          </div>
+        </div>
+
+        <!-- Empty State jika tidak ada data -->
+        <div *ngIf="trainData.length === 0" class="bg-white rounded-xl p-8 text-center text-gray-500">
+          Tidak ada data train tersedia
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Data Test -->
+    <section>
+      <!-- Header dengan judul dan tombol -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+        <div>
+          <h1 class="text-3xl font-semibold text-gray-800">Data Test</h1>
+          <p class="text-sm text-gray-500 mt-1">
+            Data yang ditampilkan jumlahnya terbatas, refresh untuk memperbarui data yang akan ditampilkan
+          </p>
+        </div>
+
+        <!-- Tombol Refresh -->
+        <button
+          (click)="onRefresh('test')"
+          class="mt-4 sm:mt-0 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+
+      <!-- List Data Test -->
+      <div class="space-y-3">
+        <div
+          *ngFor="let file of testData"
+          (click)="playAudio(file)"
+          class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200 flex items-center gap-4"
+        >
+          <!-- Icon Headphone -->
+          <div class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+          </div>
+
+          <!-- Nama File -->
+          <div class="flex-1">
+            <p class="text-gray-700 font-mono text-sm">{{ file.name }}</p>
+          </div>
+
+          <!-- Icon Audio -->
+          <!-- <div class="flex-shrink-0 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.828-2.828" />
+            </svg>
+          </div> -->
+        </div>
+
+        <!-- Empty State jika tidak ada data -->
+        <div *ngIf="testData.length === 0" class="bg-white rounded-xl p-8 text-center text-gray-500">
+          Tidak ada data test tersedia
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

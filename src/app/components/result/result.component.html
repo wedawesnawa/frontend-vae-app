@@ -1,0 +1,266 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10 max-w-7xl space-y-12">
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3B5BDB]"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+    <p class="text-red-600">{{ errorMessage }}</p>
+    <button
+      (click)="processAnother()"
+      class="mt-4 px-6 py-2 bg-[#3B5BDB] text-white rounded-lg hover:bg-[#2A4BC8] transition-colors">
+      Coba Lagi
+    </button>
+  </div>
+
+  <!-- Result Content -->
+  <div *ngIf="!isLoading && !errorMessage && processingResult" class="space-y-12">
+
+    <!-- File Info -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">{{ processingResult.filename }}</h2>
+          <p class="text-sm text-gray-500 mt-1">
+            Durasi: {{ processingResult.preprocessing.summary.duration }} |
+            Sample Rate: {{ processingResult.preprocessing.summary.sample_rate }}Hz
+          </p>
+        </div>
+        <button
+          (click)="processAnother()"
+          class="px-4 py-2 text-[#3B5BDB] border border-[#3B5BDB] rounded-lg hover:bg-[#3B5BDB] hover:text-white transition-colors">
+          + Proses File Lain
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION 1: Prapemrosesan -->
+    <section class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="px-8 pt-8 pb-0">
+          <div class="inline-block bg-[#3B5BDB] text-white px-6 py-2 rounded-lg shadow-md text-sm font-semibold tracking-wide">
+            PRAPEMROSESAN
+          </div>
+        </div>
+
+        <div class="p-8 pt-6">
+          <div class="space-y-4">
+            <div *ngFor="let item of preprocessingSteps"
+                  class="flex items-center justify-between group hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200">
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <div>
+                  <span class="text-gray-700 font-medium">{{ item.label }}</span>
+                  <p class="text-sm text-gray-500 mt-1">{{ item.description }}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <!-- Tanda Checklist -->
+                <div class="w-6 h-6 bg-[#3B5BDB] rounded-md flex items-center justify-center shadow-sm">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <!-- Keterangan Status -->
+                <span class="text-sm font-medium text-[#3B5BDB]">Done</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Ekstraksi Fitur -->
+    <section class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="px-8 pt-8 pb-0">
+          <div class="inline-block bg-[#3B5BDB] text-white px-6 py-2 rounded-lg shadow-md text-sm font-semibold tracking-wide">
+            EKSTRAKSI FITUR
+          </div>
+        </div>
+
+        <div class="p-8 pt-6">
+          <div class="space-y-4">
+            <div *ngFor="let item of extractionSteps"
+                  class="flex items-center justify-between group hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200">
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <div>
+                  <span class="text-gray-700 font-medium">{{ item.label }}</span>
+                  <p class="text-sm text-gray-500 mt-1">{{ item.description }}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <!-- Tanda Checklist -->
+                <div class="w-6 h-6 bg-[#3B5BDB] rounded-md flex items-center justify-center shadow-sm">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <!-- Keterangan Status -->
+                <span class="text-sm font-medium text-[#3B5BDB]">Done</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Info -->
+          <div class="mt-6 pt-4 border-t border-gray-100">
+            <p class="text-sm text-gray-600">
+              <span class="font-medium">Shape spektrogram:</span>
+              {{ processingResult.feature_extraction.summary.spectrogram_shape[0] }} x
+              {{ processingResult.feature_extraction.summary.spectrogram_shape[1] }}
+              (Mel bands x Time frames)
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Perbandingan dan Evaluasi -->
+    <section class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden p-8">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800">Perbandingan dan Evaluasi</h2>
+          <p class="text-gray-500 text-sm mt-1 font-medium">Persentase error (RMSE) dari Log-mel Spectrogram {{ formatMetric(processingResult.metrics.mse, 'rmse-percent') }}%</p>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Kolom Kiri: Input Asli -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-700">Input Asli</h3>
+
+            <!-- Spectrogram Image -->
+            <div class="rounded-xl h-64 w-full shadow-inner relative overflow-hidden bg-gray-50">
+              <img
+                *ngIf="originalSpectrogramUrl"
+                [src]="originalSpectrogramUrl"
+                alt="Original Log-mel Spectrogram"
+                class="w-full h-full object-contain"
+              />
+            </div>
+
+            <!-- Audio Player -->
+            <audio *ngIf="originalAudioUrl" controls class="w-full">
+              <source [src]="originalAudioUrl" type="audio/wav">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+          <!-- Kolom Kanan: Rekonstruksi VAE -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-700">Rekonstruksi VAE</h3>
+
+            <!-- Spectrogram Image -->
+            <div class="rounded-xl h-64 w-full shadow-inner relative overflow-hidden bg-gray-50">
+              <img
+                *ngIf="reconstructedSpectrogramUrl"
+                [src]="reconstructedSpectrogramUrl"
+                alt="Reconstructed Log-mel Spectrogram"
+                class="w-full h-full object-contain"
+              />
+            </div>
+
+            <!-- Audio Player -->
+            <audio *ngIf="reconstructedAudioUrl" controls class="w-full">
+              <source [src]="reconstructedAudioUrl" type="audio/wav">
+              Your browser does not support the audio element.
+            </audio>
+
+            <!-- Download Button -->
+            <!-- <button
+              (click)="downloadAudio()"
+              class="mt-2 w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download Audio Rekonstruksi
+            </button> -->
+          </div>
+        </div>
+
+        <!-- Evaluation Metrics -->
+        <div class="mt-8 pt-6 border-t border-gray-200 overflow-visible">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 overflow-visible">
+            <!-- MSE Card -->
+            <div class="relative group overflow-visible">
+              <div class="bg-gray-50 rounded-lg p-4 cursor-help transition-all duration-200 hover:bg-gray-100">
+                <p class="text-sm text-gray-500">MSE</p>
+                <p class="text-2xl font-bold text-gray-800">{{ formatMetric(processingResult.metrics.mse) }}</p>
+                <p class="text-xs text-gray-400 mt-1">Mean Squared Error</p>
+              </div>
+
+              <!-- Tooltip - Posisi disesuaikan -->
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-normal w-64 z-[100] shadow-xl">
+                <div class="font-semibold mb-1">Mean Squared Error (MSE)</div>
+                <p class="text-gray-200 text-xs leading-relaxed">
+                  Mengukur rata-rata kuadrat error antara sinyal asli dan rekonstruksi.
+                  Nilai yang lebih kecil mengindikasikan kualitas rekonstruksi yang lebih baik.
+                </p>
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+
+            <!-- KLD Card -->
+            <div class="relative group overflow-visible">
+              <div class="bg-gray-50 rounded-lg p-4 cursor-help transition-all duration-200 hover:bg-gray-100">
+                <p class="text-sm text-gray-500">KLD</p>
+                <p class="text-2xl font-bold text-gray-800">{{ formatMetric(processingResult.metrics.kld) }}</p>
+                <p class="text-xs text-gray-400 mt-1">KL Divergence</p>
+              </div>
+
+              <!-- Tooltip -->
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-normal w-64 z-[100] shadow-xl">
+                <div class="font-semibold mb-1">Kullback-Leibler Divergence (KLD)</div>
+                <p class="text-gray-200 text-xs leading-relaxed">
+                  Mengukur perbedaan antara distribusi probabilitas latent space dengan prior distribution.
+                  Nilai optimal bervariasi tergantung kompleksitas model dan dataset.
+                </p>
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+
+            <!-- ELBO Card -->
+            <div class="relative group overflow-visible">
+              <div class="bg-gray-50 rounded-lg p-4 cursor-help transition-all duration-200 hover:bg-gray-100">
+                <p class="text-sm text-gray-500">ELBO</p>
+                <p class="text-2xl font-bold text-gray-800">{{ formatMetric(processingResult.metrics.elbo) }}</p>
+                <p class="text-xs text-gray-400 mt-1">Evidence Lower Bound</p>
+              </div>
+
+              <!-- Tooltip -->
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-normal w-64 z-[100] shadow-xl">
+                <div class="font-semibold mb-1">Evidence Lower Bound (ELBO)</div>
+                <p class="text-gray-200 text-xs leading-relaxed">
+                  Ukuran seberapa baik model VAE dalam merekonstruksi data sambil mempertahankan distribusi latent space yang teratur. Semakin tinggi nilainya, semakin baik model.
+                </p>
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+
+            <!-- LSD Card -->
+            <div class="relative group overflow-visible">
+              <div class="bg-gray-50 rounded-lg p-4 cursor-help transition-all duration-200 hover:bg-gray-100">
+                <p class="text-sm text-gray-500">LSD</p>
+                <p class="text-2xl font-bold text-gray-800">{{ formatMetric(processingResult.metrics.lsd.mean) }}</p>
+                <p class="text-xs text-gray-400 mt-1">Log-Spectral Distance</p>
+              </div>
+
+              <!-- Tooltip -->
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-normal w-64 z-[100] shadow-xl">
+                <div class="font-semibold mb-1">Log-Spectral Distance (LSD)</div>
+                <p class="text-gray-200 text-xs leading-relaxed">
+                  Mengukur perbedaan dalam domain frekuensi antara sinyal asli dan rekonstruksi.
+                  Nilai mendekati 0 menunjukkan kualitas rekonstruksi yang baik secara persepsi audio.
+                </p>
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

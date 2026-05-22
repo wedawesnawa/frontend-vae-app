@@ -1,0 +1,77 @@
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-4">
+      <!-- Logo dengan gambar -->
+      <div class="flex items-center space-x-3">
+        <!-- Logo Image -->
+        <div class="flex items-center">
+          <!-- Option 1: Logo dari assets -->
+          <img
+            src="/logo.png"
+            alt="ReyongSynth Logo"
+            class="h-8 w-8 object-contain"
+            onerror="this.style.display='none'"
+          />
+        </div>
+
+        <!-- Brand Name -->
+        <a href="#" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+          ReyongSynth
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-8">
+        <a *ngFor="let item of menuItems"
+           [href]="item.link"
+           class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+          {{ item.label }}
+        </a>
+      </nav>
+
+      <!-- Sign In Button (Desktop) -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a (click)="openWhatsApp()" class="px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors duration-200">
+          Contact us
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button
+          (click)="toggleMenu()"
+          type="button"
+          class="text-gray-700 hover:text-gray-900 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              *ngIf="!isMenuOpen"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+            <path
+              *ngIf="isMenuOpen"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="isMenuOpen" class="md:hidden py-4 border-t border-gray-200">
+      <div class="flex flex-col space-y-4">
+        <a *ngFor="let item of menuItems"
+           [href]="item.link"
+           class="text-gray-700 hover:text-blue-600 font-medium py-2">
+          {{ item.label }}
+        </a>
+        <a (click)="openWhatsApp()"  class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 text-center">
+          Contact us
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
