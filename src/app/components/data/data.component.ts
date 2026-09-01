@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface AudioFile {
   name: string;
@@ -16,8 +17,8 @@ interface AudioFile {
 })
 export class DataComponent implements OnInit {
 
-  private API_KEY = 'AIzaSyCHsgrzPfOP62tGm7DLLNg-AHvfjEdYJT0'; // API Key Anda
-  private FOLDER_ID = '184wE8TWMbQEE4FWT1dd6xY4R6JXhqlpJ';
+  private API_KEY =  environment.apiKey;
+  private FOLDER_ID =  environment.folderId;
 
   loading = false;
   errorMessage = '';
